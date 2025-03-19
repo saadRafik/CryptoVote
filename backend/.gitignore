@@ -1,0 +1,16 @@
+/artifacts
+artifacts
+/cache
+cache
+/coverage
+coverage
+/coverage.json
+coverage.json
+.env
+ignition/deployments
+ignition/deployments/chain-31337
+node_modules
+/typechain
+typechain
+/typechain-types
+typechain-types
