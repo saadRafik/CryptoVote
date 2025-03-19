@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import ProposalList from "../../components/ProposalList/ProposalList";
 import ProposalForm from "../../components/ProposalForm/ProposalForm";
 

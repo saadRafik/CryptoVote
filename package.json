@@ -10,9 +10,9 @@
     "browserify": "^17.0.1",
     "ethers": "^5.8.0",
     "process": "^0.11.10",
-    "react": "^19.0.0",
+    "react": "^18.3.1",
     "react-app-rewired": "^2.2.1",
-    "react-dom": "^19.0.0",
+    "react-dom": "^18.3.1",
     "react-scripts": "^3.0.1",
     "react-toastify": "^8.1.1",
     "web-vitals": "^2.1.4"
@@ -51,7 +51,7 @@
   },
   "devDependencies": {
     "@babel/preset-env": "^7.26.9",
-    "@babel/preset-react": "^7.26.3",
+    "@babel/preset-react": "^7.10.4",
     "autoprefixer": "^9.8.8",
     "postcss": "^7.0.39",
     "sass": "^1.86.0",

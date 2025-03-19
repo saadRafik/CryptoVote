@@ -1,28 +1,34 @@
-import React, { useState } from "react";
+import { useState } from "react";
+import { useContractWrite } from "wagmi";
+import { VOTING_CONTRACT_ADDRESS, VOTING_ABI } from "../config";
 
-const ProposalForm = ({ addProposal }) => {
-    const [proposalText, setProposalText] = useState("");
+const ProposalForm = () => {
+  const [proposalText, setProposalText] = useState("");
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        if (proposalText.trim()) {
-            addProposal(proposalText);
-            setProposalText("");
-        }
-    };
+  const { write: submitProposal } = useContractWrite({
+    address: VOTING_CONTRACT_ADDRESS,
+    abi: VOTING_ABI,
+    functionName: "submitProposal",
+  });
 
-    return (
-        <form onSubmit={handleSubmit}>
-            <input
-                type="text"
-                value={proposalText}
-                onChange={(e) => setProposalText(e.target.value)}
-                placeholder="Enter proposal"
-                required
-            />
-            <button type="submit">Submit Proposal</button>
-        </form>
-    );
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    submitProposal({ args: [proposalText] });
+    setProposalText("");
+  };
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <input
+        type="text"
+        value={proposalText}
+        onChange={(e) => setProposalText(e.target.value)}
+        placeholder="Enter proposal text"
+        required
+      />
+      <button type="submit">Submit Proposal</button>
+    </form>
+  );
 };
 
 export default ProposalForm;

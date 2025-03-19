@@ -1,25 +1,42 @@
-import React, { useState, useEffect } from "react";
-import WalletConnect from "./components/WalletConnect/WalletConnect"; 
-import AdminView from "./views/Admin/AdminView";
-import VoterView from "./views/Voter/VoterView";
+import { WagmiConfig, createConfig, configureChains } from "wagmi";
+import { mainnet, goerli } from "wagmi/chains";
+import { publicProvider } from "wagmi/providers/public";
+import { RainbowKitProvider, getDefaultWallets } from "@rainbow-me/rainbowkit";
+import "@rainbow-me/rainbowkit/styles.css";
+import ProposalForm from "./components/ProposalForm";
+import ProposalList from "./components/ProposalList";
+import WinnerDisplay from "./components/WinnerDisplay";
 
-const App = () => {
-    const [view, setView] = useState(localStorage.getItem("view") || "login");
+const { chains, publicClient } = configureChains(
+  [goerli], // Use Goerli testnet
+  [publicProvider()]
+);
 
-    useEffect(() => {
-        localStorage.setItem("view", view);
-    }, [view]);
+const { connectors } = getDefaultWallets({
+  appName: "CryptoVote",
+  projectId: "YOUR_PROJECT_ID", // Get from RainbowKit dashboard
+  chains,
+});
 
-    return (
-        <div className="app-container">
-            <WalletConnect />
-            <button onClick={() => setView("admin")}>Admin</button>
-            <button onClick={() => setView("voter")}>Voter</button>
+const wagmiConfig = createConfig({
+  autoConnect: true,
+  connectors,
+  publicClient,
+});
 
-            {view === "admin" && <AdminView />}
-            {view === "voter" && <VoterView />}
+function App() {
+  return (
+    <WagmiConfig config={wagmiConfig}>
+      <RainbowKitProvider chains={chains}>
+        <div>
+          <h1>CryptoVote DApp</h1>
+          <ProposalForm />
+          <ProposalList />
+          <WinnerDisplay />
         </div>
-    );
-};
+      </RainbowKitProvider>
+    </WagmiConfig>
+  );
+}
 
 export default App;

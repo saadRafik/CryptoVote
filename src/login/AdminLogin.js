@@ -1,39 +1,39 @@
-import React, { useState } from "react";
+import React from "react";
+import { ethers } from "ethers";
+import { VOTING_CONTRACT_ADDRESS, VOTING_ABI } from "../../config"; 
 
-const AdminLogin = ({ setAdmin }) => {
-    const [username, setUsername] = useState("");
-    const [adminId, setAdminId] = useState("");
+const AdminLogin = () => {
+    const startVotingSession = async () => {
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        const signer = provider.getSigner();
+        const contract = new ethers.Contract(VOTING_CONTRACT_ADDRESS, VOTING_ABI, signer);
 
-    const handleLogin = (event) => {
-        event.preventDefault();
-        if (username.trim() && adminId.trim()) {
-            setAdmin({ username, adminId });
-            localStorage.setItem("adminData", JSON.stringify({ username, adminId }));
-        } else {
-            alert("Please enter a valid username and admin ID.");
+        try {
+            await contract.startVotingSession();
+            alert("Voting session started!");
+        } catch (error) {
+            console.error("Error starting session:", error);
+        }
+    };
+
+    const endVotingSession = async () => {
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        const signer = provider.getSigner();
+        const contract = new ethers.Contract(VOTING_CONTRACT_ADDRESS, VOTING_ABI, signer);
+
+        try {
+            await contract.endVotingSession();
+            alert("Voting session ended!");
+        } catch (error) {
+            console.error("Error ending session:", error);
         }
     };
 
     return (
-        <div className="admin-login">
-            <h2>Admin Login</h2>
-            <form onSubmit={handleLogin}>
-                <input 
-                    type="text" 
-                    placeholder="Enter Username" 
-                    value={username} 
-                    onChange={(e) => setUsername(e.target.value)}
-                    required 
-                />
-                <input 
-                    type="password" 
-                    placeholder="Enter Admin ID" 
-                    value={adminId} 
-                    onChange={(e) => setAdminId(e.target.value)}
-                    required 
-                />
-                <button type="submit">Login</button>
-            </form>
+        <div>
+            <h2>Admin Controls</h2>
+            <button onClick={startVotingSession}>Start Voting</button>
+            <button onClick={endVotingSession}>End Voting</button>
         </div>
     );
 };
