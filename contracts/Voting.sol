@@ -36,7 +36,7 @@ contract Voting is Ownable {
 
     event VoterRegistered(address voterAddress);
     event WorkflowStatusChange(WorkflowStatus previousStatus, WorkflowStatus newStatus);
-    event ProposalRegistered(uint proposalId);
+    event ProposalRegistered(uint proposalId);  
     event Voted(address voter, uint proposalId);
 
     modifier onlyAdmin {
@@ -115,6 +115,32 @@ contract Voting is Ownable {
 
         status = WorkflowStatus.VotesTallied;
         emit WorkflowStatusChange(WorkflowStatus.VotingSessionEnded, status);
+    }
+
+    function resetVoting() public onlyAdmin {
+        require(status == WorkflowStatus.VotesTallied, "Le vote doit etre termine pour etre reinitialise !");
+        
+        // Reinitialisation des votants
+        for (uint i = 0; i < voterAddresses.length; i++) {
+            voters[voterAddresses[i]].hasVoted = false;
+            voters[voterAddresses[i]].votedProposalId = 0;
+        }
+
+        // Suppression des propositions
+        delete proposals;
+        
+        // Reinitialisation du statut
+        status = WorkflowStatus.RegisteringVoters;
+
+        emit WorkflowStatusChange(WorkflowStatus.VotesTallied, status);
+    }
+
+    function getTotalVotes() public view returns (uint) {
+        uint totalVotes = 0;
+        for (uint i = 0; i < proposals.length; i++) {
+            totalVotes += proposals[i].voteCount;
+        }
+        return totalVotes;
     }
 
     function getWinner() public view returns (uint) {
