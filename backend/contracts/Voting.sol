@@ -42,6 +42,7 @@ contract Voting is Ownable {
     event WorkflowStatusChange(WorkflowStatus previousStatus, WorkflowStatus newStatus);
     event ProposalRegistered(uint proposalId);
     event Voted(address voter, uint proposalId);
+    event WinnerDeclared(uint winningProposalId, uint voteCount);
 
     modifier onlyAdmin {
         require(msg.sender == admin, "Seul l'admin peut faire cette action ^^");
@@ -65,6 +66,7 @@ contract Voting is Ownable {
     function submitProposal(string memory _description) public {
         require(status == WorkflowStatus.ProposalsRegistrationStarted, "Les propositions ne sont pas encore ouvertes !");
         require(voters[msg.sender].isRegistered, "Vous n'etes pas un votant enregistre !");
+        require(bytes(_description).length > 0, "La description ne peut pas etre vide !");
         proposals.push(Proposal(_description, 0));
         emit ProposalRegistered(proposals.length - 1);
     }
@@ -114,6 +116,7 @@ contract Voting is Ownable {
 
         status = WorkflowStatus.VotesTallied;
         emit WorkflowStatusChange(WorkflowStatus.VotingSessionEnded, status);
+        emit WinnerDeclared(winningProposalId, maxVotes);
     }
 
     function getWinner() public view returns (uint) {
@@ -131,7 +134,9 @@ contract Voting is Ownable {
         }
 
         // Suppression des propositions
-        delete proposals;
+        while (proposals.length > 0) {
+            proposals.pop();
+        }
 
         // Réinitialisation du statut
         status = WorkflowStatus.RegisteringVoters;
