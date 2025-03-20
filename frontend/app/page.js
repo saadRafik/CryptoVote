@@ -1,53 +1,68 @@
 'use client'
-import { ConnectButton } from '@rainbow-me/rainbowkit';
-import { abi, contractAddress } from '@/constants';
+import '/styles/global.css';
+import { useState, useEffect } from 'react';
+import { useAccount } from 'wagmi';
 
-import { useAccount } from 'wagmi'
-import { readContract, prepareWriteContract, writeContract } from '@wagmi/core'
+import AdminDashboard from '@/admin/AdminDashboard';
+import Header from '@/shared/Header';
+import Footer from '@/shared/Footer';
+import Notification from '@/shared/Notification';
 
-import { useState } from 'react';
+import { getAdmin } from '@/contract/Voting';
 
 export default function Home() {
+  const [notification, setNotification] = useState(null);
+  const [isAdmin, setIsAdmin] = useState(false);
 
-  // The State that will get the number on the blockchain (get method)
-  const [getNumber, setGetNumber] = useState()
-  // The State that will keep track of the user input (set method)
-  const [setNumber, setSetNumber] = useState()
-  // We get the address from rainbowkit and if the user is connected or not
-  const { address, isConnected } = useAccount()
+  const { address, isConnected } = useAccount();
 
-  const getTheNumber = async() => {
-    const data = await readContract({
-      address: contractAddress,
-      abi: abi,
-      functionName: 'retrieve',
-    })
-    setGetNumber(Number(data))
+  const checkIfAdmin = async () => {
+    if (isConnected && address) {
+      try {
+        const adminAddress = await getAdmin();
+        setIsAdmin(address.toLowerCase() === adminAddress.toLowerCase());
+      } catch (error) {
+        console.error('Error checking admin status:', error);
+        setIsAdmin(false);
+      }
+    }
   }
 
-  const changeNumber = async() => {
-    const { request } = await prepareWriteContract({
-      address: contractAddress,
-      abi: abi,
-      functionName: 'store',
-      args: [setNumber]
-    })
-    const { hash } = await writeContract(request)
-    await getTheNumber()
-    setSetNumber()
-  }
+  // hook: look to separate in other file
+  useEffect(() => {
+    if (isConnected && address) {
+      checkIfAdmin();
+    }
+  }, [address, isConnected]);
 
   return (
-    <>
-      <ConnectButton />
-      {isConnected ? (
-        <div>
-          <p><button onClick={getTheNumber}>Get The Number</button> : {getNumber}</p>
-          <p><input type="number" onChange={(e) => setSetNumber(e.target.value)} /> <button onClick={changeNumber}>Change the number</button></p>
-        </div>
+    <div>
+      <Header />
+      
+      {notification && <Notification message={notification.message} type={notification.type} />}
+      
+      {isAdmin ? (
+        <AdminDashboard setNotification={setNotification} />
       ) : (
-        <p>Please connect your Wallet to our DApp.</p>
+        <div>
+          <h3>Bienvenue sur l'application de vote !</h3>
+          <p>Connectez-vous pour participer au vote.</p>
+        </div>
       )}
-    </>
-  )
+
+      {
+        isConnected ? (
+          <div>
+            <p>Vous êtes connecté avec l'adresse {address}.</p>
+          </div>
+        ) : (
+          <div>
+            <p>Vous n'êtes pas connecté.</p>
+          </div>
+        )
+      }
+
+      <Footer />
+    </div>
+  );
 }

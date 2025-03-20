@@ -1,3 +1,4 @@
+export const contractAddress = "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512"
 export const abi = [
   {
     "inputs": [],
@@ -95,6 +96,25 @@ export const abi = [
     "inputs": [
       {
         "indexed": false,
+        "internalType": "uint256",
+        "name": "winningProposalId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "voteCount",
+        "type": "uint256"
+      }
+    ],
+    "name": "WinnerDeclared",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
         "internalType": "enum Voting.WorkflowStatus",
         "name": "previousStatus",
         "type": "uint8"
@@ -134,6 +154,19 @@ export const abi = [
     "name": "endVotingSession",
     "outputs": [],
     "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getAdmin",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
     "type": "function"
   },
   {
@@ -361,4 +394,3 @@ export const abi = [
     "type": "function"
   }
 ]
-export const contractAddress = "0x922D6956C99E12DFeB3224DEA977D0939758A1Fe"

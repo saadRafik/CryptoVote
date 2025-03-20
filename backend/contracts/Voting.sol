@@ -49,6 +49,10 @@ contract Voting is Ownable {
         _;
     }
 
+    function getAdmin() public view returns (address) {
+        return admin;
+    }
+
     function registerVoter(address _voter) public onlyAdmin {
         require(status == WorkflowStatus.RegisteringVoters, "L'enregistrement des votants est termine !");
         require(!voters[_voter].isRegistered, "Le votant est deja enregistre !");

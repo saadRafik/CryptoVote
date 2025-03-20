@@ -26,6 +26,7 @@ npx hardhat init
 npm i dotenv 
 # install openzeppelin
 npm install @openzeppelin/contracts
+npm install @openzeppelin/test-helpers
 ```
 
 ## Run HardHat
