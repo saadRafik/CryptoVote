@@ -1,4 +1,4 @@
-export const contractAddress = "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512"
+export const contractAddress = "0x959922bE3CAee4b8Cd9a407cc3ac1C251C2007B1"
 export const abi = [
   {
     "inputs": [],
@@ -143,6 +143,25 @@ export const abi = [
     "type": "function"
   },
   {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "user",
+        "type": "address"
+      }
+    ],
+    "name": "checkIfAdmin",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [],
     "name": "endProposalRegistration",
     "outputs": [],
@@ -158,12 +177,24 @@ export const abi = [
   },
   {
     "inputs": [],
-    "name": "getAdmin",
+    "name": "getProposals",
     "outputs": [
       {
-        "internalType": "address",
+        "components": [
+          {
+            "internalType": "string",
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "internalType": "uint256",
+            "name": "voteCount",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct Voting.Proposal[]",
         "name": "",
-        "type": "address"
+        "type": "tuple[]"
       }
     ],
     "stateMutability": "view",
@@ -184,12 +215,44 @@ export const abi = [
   },
   {
     "inputs": [],
+    "name": "getVoterAddresses",
+    "outputs": [
+      {
+        "internalType": "address[]",
+        "name": "",
+        "type": "address[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
     "name": "getWinner",
     "outputs": [
       {
         "internalType": "uint256",
         "name": "",
         "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "user",
+        "type": "address"
+      }
+    ],
+    "name": "isRegisteredVoter",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
       }
     ],
     "stateMutability": "view",
@@ -394,3 +457,12 @@ export const abi = [
     "type": "function"
   }
 ]
+
+export const WorkflowStatus = {
+  RegisteringVoters: 0,
+  ProposalsRegistrationStarted: 1,
+  ProposalsRegistrationEnded: 2,
+  VotingSessionStarted: 3,
+  VotingSessionEnded: 4,
+  VotesTallied: 5
+}

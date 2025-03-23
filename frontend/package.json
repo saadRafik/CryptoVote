@@ -16,5 +16,8 @@
     "react-dom": "18.2.0",
     "viem": "^1.10.9",
     "wagmi": "^1.4.1"
+  },
+  "devDependencies": {
+    "encoding": "^0.1.13"
   }
 }

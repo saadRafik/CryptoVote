@@ -1,12 +1,13 @@
 import { prepareWriteContract, writeContract, readContract } from '@wagmi/core';
 import { contractAddress, abi } from '@/constants';
 
-export const getAdmin = async () => {
+export const isContractRunner = async (userAddress) => {
   try {
     const isAdmin = await readContract({
       address: contractAddress,
       abi,
-      functionName: 'getAdmin',
+      functionName: 'checkIfAdmin',
+      args: [userAddress],
     });
 
     return isAdmin;
@@ -15,6 +16,37 @@ export const getAdmin = async () => {
     throw new Error('Une erreur est survenue lors de la vérification du statut d\'administrateur');
   }
 }
+
+export const isRegistered = async (user) => {
+  try {
+    const isRegistered = await readContract({
+      address: contractAddress,
+      abi,
+      functionName: 'isRegisteredVoter',
+      args: [user],
+    });
+
+    return isRegistered;
+  } catch (error) {
+    console.error('Erreur lors de la vérification du statut d\'administrateur :', error);
+    throw new Error('Une erreur est survenue lors de la vérification du statut d\'administrateur');
+  }
+}
+ 
+export const getVoters = async () => {
+  try {
+    const votersList = await readContract({
+      address: contractAddress,
+      abi,
+      functionName: 'getVoterAddresses',
+    });
+
+    return votersList;
+  } catch (error) {
+    console.error('Erreur lors de la récupération des votants :', error);
+    throw new Error('Une erreur est survenue lors de la récupération des votants');
+  }
+};
 
 /**
  * Enregistre un votant.
@@ -77,6 +109,23 @@ export const submitProposal = async (description) => {
   } catch (error) {
     console.error('Erreur lors de la soumission de la proposition :', error);
     throw new Error('Une erreur est survenue lors de la soumission de la proposition');
+  }
+};
+
+export const endProposalRegistration = async () => {
+  try {
+    const { request } = await prepareWriteContract({
+      address: contractAddress,
+      abi,
+      functionName: 'endProposalRegistration',
+    });
+
+    const { hash } = await writeContract(request);
+    console.log(`Session d'enregistrement des propositions démarrée. Hash de la transaction : ${hash}`);
+    return hash;
+  } catch (error) {
+    console.error('Erreur lors du démarrage de la session d\'enregistrement des propositions :', error);
+    throw new Error('Une erreur est survenue lors du démarrage de la session d\'enregistrement des propositions');
   }
 };
 
@@ -204,9 +253,9 @@ export const getProposals = async () => {
     const proposals = await readContract({
       address: contractAddress,
       abi,
-      functionName: 'proposals',
-      args: [0], // Exemple: récupérer la proposition avec l'ID 0
+      functionName: 'getProposals',
     });
+
     return proposals;
   } catch (error) {
     console.error('Erreur lors de la récupération des propositions :', error);

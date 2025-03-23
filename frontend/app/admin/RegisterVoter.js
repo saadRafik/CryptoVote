@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { registerVoter } from '@/contract/Voting';
 
-export default function RegisterVoter() {
+export default function RegisterVoter({ onRegister }) {
   const [voterAddress, setVoterAddress] = useState('');
   const [error, setError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
@@ -12,6 +12,7 @@ export default function RegisterVoter() {
       setSuccessMessage('');
       const hash = await registerVoter(voterAddress);
       setSuccessMessage(`Votant enregistré avec succès ! Transaction Hash : ${hash}`);
+      onRegister();
     } catch (err) {
       setError('Une erreur est survenue lors de l\'enregistrement du votant.');
     }

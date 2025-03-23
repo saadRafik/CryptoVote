@@ -49,8 +49,20 @@ contract Voting is Ownable {
         _;
     }
 
-    function getAdmin() public view returns (address) {
-        return admin;
+    function checkIfAdmin(address user) public view returns (bool) {
+        return user == admin;
+    }
+
+    function isRegisteredVoter(address user) public view returns (bool) {
+        return voters[user].isRegistered;
+    }
+
+    function getVoterAddresses() public view returns (address[] memory) {
+        return voterAddresses;
+    }
+
+    function getProposals() public view returns (Proposal[] memory) {
+        return proposals;
     }
 
     function registerVoter(address _voter) public onlyAdmin {

@@ -1,6 +1,10 @@
 {
 	"compilerOptions": {
-		"module": "NodeNext",
-		"moduleResolution": "NodeNext"
+	  "strict": true,
+	  "esModuleInterop": true,
+	  "skipLibCheck": true,
+	  "resolveJsonModule": true,
+	  "moduleResolution": "node"
 	}
-}
+  }
+  

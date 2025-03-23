@@ -22,7 +22,7 @@ export default function TallyVotes() {
 
   return (
     <div>
-      <h2>Comptabiliser les votes</h2>
+      <h1>Resultat du Vote</h1>
       <button onClick={handleTallyVotes} disabled={isLoading}>
         {isLoading ? 'Chargement...' : 'Comptabiliser les votes'}
       </button>
