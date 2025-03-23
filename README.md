@@ -1,7 +1,10 @@
 # Project
 
 ## Run project
-
+- CARON Florimond: La supervision des tests, la gestion des dépendances du backend et du frontend ainsi que le développement de l'interface de communication du frontend vers le contrat.
+- GOUTTAYA Merwane : Le contrat intelligent et les tests automatisés. 
+- RAFIK Saad : Le design de l'interface de vote (frontend).
+  
 - Backend
 
 ```bash
